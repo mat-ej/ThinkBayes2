@@ -20,8 +20,8 @@ def values(series):
     returns: Pandas DataFrame
     """
     series = series.value_counts(dropna=False).sort_index()
-    series.index.name = 'values'
-    series.name = 'counts'
+    series.index.name = "values"
+    series.name = "counts"
     return pd.DataFrame(series)
 
 
@@ -32,8 +32,8 @@ def write_table(table, label, **options):
     label: string
     options: passed to DataFrame.to_latex
     """
-    filename = f'tables/{label}.tex'
-    fp = open(filename, 'w')
+    filename = f"tables/{label}.tex"
+    fp = open(filename, "w")
     s = table.to_latex(**options)
     fp.write(s)
     fp.close()
@@ -46,8 +46,8 @@ def write_pmf(pmf, label):
     label: string
     """
     df = pd.DataFrame()
-    df['qs'] = pmf.index
-    df['ps'] = pmf.values
+    df["qs"] = pmf.index
+    df["ps"] = pmf.values
     write_table(df, label, index=False)
 
 
@@ -90,14 +90,14 @@ def savefig(root, **options):
     root: string filename root
     options: passed to plt.savefig
     """
-    format = options.pop('format', None)
+    format = options.pop("format", None)
     if format:
         formats = [format]
     else:
-        formats = ['pdf', 'png']
+        formats = ["pdf", "png"]
 
     for format in formats:
-        fname = f'figs/{root}.{format}'
+        fname = f"figs/{root}.{format}"
         plt.savefig(fname, **options)
 
 
@@ -108,8 +108,8 @@ def make_die(sides):
 
     returns: Pmf
     """
-    outcomes = np.arange(1, sides+1)
-    die = Pmf(1/sides, outcomes)
+    outcomes = np.arange(1, sides + 1)
+    die = Pmf(1 / sides, outcomes)
     return die
 
 
@@ -151,7 +151,7 @@ def summarize(posterior, digits=3, prob=0.9):
     """
     mean = np.round(posterior.mean(), 3)
     ci = posterior.credible_interval(prob)
-    print (mean, ci)
+    print(mean, ci)
 
 
 def outer_product(s1, s2):
@@ -197,7 +197,7 @@ def make_joint(s1, s2):
     return: DataFrame
     """
     X, Y = np.meshgrid(s1, s2)
-    return pd.DataFrame(X*Y, columns=s1.index, index=s2.index)
+    return pd.DataFrame(X * Y, columns=s1.index, index=s2.index)
 
 
 def make_mesh(joint):
@@ -260,8 +260,7 @@ def plot_contour(joint, **options):
 
     underride(options, levels=levels, linewidths=1)
     cs = plt.contour(joint.columns, joint.index, joint, **options)
-    decorate(xlabel=joint.columns.name,
-             ylabel=joint.index.name)
+    decorate(xlabel=joint.columns.name, ylabel=joint.index.name)
     return cs
 
 
@@ -273,7 +272,7 @@ def make_binomial(n, p):
 
     returns: Pmf representing the distribution of k
     """
-    ks = np.arange(n+1)
+    ks = np.arange(n + 1)
     ps = binom.pmf(ks, n, p)
     return Pmf(ps, ks)
 
@@ -286,7 +285,7 @@ def make_gamma_dist(alpha, beta):
 
     returns: gamma object
     """
-    dist = gamma(alpha, scale=1/beta)
+    dist = gamma(alpha, scale=1 / beta)
     dist.alpha = alpha
     dist.beta = beta
     return dist
@@ -351,7 +350,9 @@ def kde_from_pmf(pmf, n=101, **options):
     pmf.normalize()
     return pmf
 
+
 from statsmodels.nonparametric.smoothers_lowess import lowess
+
 
 def make_lowess(series):
     """Use LOWESS to compute a smooth line.
@@ -368,17 +369,20 @@ def make_lowess(series):
 
     return pd.Series(data, index=index)
 
+
 def plot_series_lowess(series, color):
     """Plots a series of data points and a smooth line.
 
     series: pd.Series
     color: string or tuple
     """
-    series.plot(lw=0, marker='o', color=color, alpha=0.5)
+    series.plot(lw=0, marker="o", color=color, alpha=0.5)
     smooth = make_lowess(series)
-    smooth.plot(label='_', color=color)
+    smooth.plot(label="_", color=color)
+
 
 from seaborn import JointGrid
+
 
 def joint_plot(joint, **options):
     """Show joint and marginal distributions.
@@ -388,20 +392,17 @@ def joint_plot(joint, **options):
     """
     # get the names of the parameters
     x = joint.columns.name
-    x = 'x' if x is None else x
+    x = "x" if x is None else x
 
     y = joint.index.name
-    y = 'y' if y is None else y
+    y = "y" if y is None else y
 
     # make a JointGrid with minimal data
-    data = pd.DataFrame({x:[0], y:[0]})
+    data = pd.DataFrame({x: [0], y: [0]})
     g = JointGrid(x=x, y=y, data=data, **options)
 
     # replace the contour plot
-    g.ax_joint.contour(joint.columns,
-                       joint.index,
-                       joint,
-                       cmap='viridis')
+    g.ax_joint.contour(joint.columns, joint.index, joint, cmap="viridis")
 
     # replace the marginals
     marginal_x = marginal(joint, 0)
@@ -456,11 +457,29 @@ Re80 = (0.988, 0.646, 0.532, 0.7)
 
 from cycler import cycler
 
-color_list = [Bl30, Or70, Gr50, Re60, Pu20, Gray70, Re80, Gray50,
-              Gr70, Bl50, Re40, Pu70, Or50, Gr30, Bl70, Pu50, Gray30]
+color_list = [
+    Bl30,
+    Or70,
+    Gr50,
+    Re60,
+    Pu20,
+    Gray70,
+    Re80,
+    Gray50,
+    Gr70,
+    Bl50,
+    Re40,
+    Pu70,
+    Or50,
+    Gr30,
+    Bl70,
+    Pu50,
+    Gray30,
+]
 color_cycle = cycler(color=color_list)
+
 
 def set_pyplot_params():
     # plt.rcParams['figure.dpi'] = 300
-    plt.rcParams['axes.prop_cycle'] = color_cycle
-    plt.rcParams['lines.linewidth'] = 3
+    plt.rcParams["axes.prop_cycle"] = color_cycle
+    plt.rcParams["lines.linewidth"] = 3
