@@ -29,4 +29,6 @@ dependencies:
   - nbmake
   - jupyter-book
   - ghp-import
+  - mypy
+  - black
   - empiricaldist>=0.6.7
