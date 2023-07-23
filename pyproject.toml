@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "thinkbayes2"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.10.*"
+jupyter = "^1.0.0"
+ipykernel = "^6.24.0"
+empiricaldist = "^0.6.8"
+tables = "^3.8.0"
+xlrd = "^2.0.1"
+html5lib = "^1.1"
+lxml = "^4.9.3"
+scipy = "^1.11.1"
+statsmodels = "^0.14.0"
+seaborn = "^0.12.2"
+pandas = "^2.0.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
